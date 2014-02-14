@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>Windows move</title>
+    <meta content="">
+    <style></style>
+<!--
+    300x200
+    desplaze la forma aleatoria la nueva ventana durante 8 veces
+    set interval, cada segundo
+    setInterval("window.scrollTo(0,0)",10)
+    moveTo(x,y);
+    moveBy
+-->
+   <script>
+	 
+	var finestra;
+	var interv = 1000;
+	var xMouse,yMouse;
+	function coordenadas(event) 
+	{
+		xMouse=event.clientX;
+		yMouse=event.clientY;
+	}
+	function opening() 
+	{
+		finestra = window.open("","","width=300,height=200");
+		comensar();
+	}
+	function closing()
+	{
+		finestra.close();
+	}
+	function move()
+	{
+		x = xMouse+Math.random()*window.innerWidth;
+		y = yMouse + Math.random()*window.innerHeight;
+		
+		finestra.moveTo(x,y);
+		finestra.focus();
+	}
+	function comensar()
+	{
+		setInterval(move,interv);
+	}
+  </script>
+  </head>
+  <body onMouseMove="coordenadas(event);">
+	  <button onclick="opening()">Click per orbir nova finestra</button>
+	  <button onclick="closing()">Click per tancar la nova finestra</button>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>Bancs</title>
+	<link rel="stylesheet" type="text/css" href="css.css">
+    <script>
+		// variable per a espanya
+	var esp = 1428;
+	var resultat;
+	var banc, sucursal, dc, compte;
+    function calcular()
+    {
+		iban_text = document.getElementById("res");
+		iban_text.innerHTML = "";
+		var bancs = document.getElementsByName("banc");
+		for (i=0; i<bancs.length; i++) 
+		{
+			if (bancs[i].checked) 
+			{
+				banc = bancs[i].value;
+				break;
+			}
+		}
+		
+		// Comprovació de valors
+		if (banc == "XXXX")
+		{
+			banc = document.getElementById("altre").value;
+			if ( isNaN(banc) || banc.length < 4)
+			{
+				bancdiv = document.getElementById("altreDiv");
+				bancdiv.innerHTML = "El codi del banc esta malament";
+				return false;
+			}
+		}
+		sucursal = document.getElementById("sucursal").value;
+		if ( isNaN(sucursal) || sucursal.length < 4)
+		{
+			controlDiv = document.getElementById("sucursalDiv");
+			controlDiv.innerHTML = "El codi de la sucursal esta malament";
+			return false;
+		}
+		dc = document.getElementById("dc").value;
+		if ( isNaN(dc) || dc.length < 2)
+		{
+			sucursalDiv = document.getElementById("controlDiv");
+			sucursalDiv.innerHTML = "El codi de control esta malament";
+			return false;
+		}
+		compte = document.getElementById("compte").value;
+		if ( isNaN(compte) || compte.length < 10)
+		{
+			compteDiv = document.getElementById("compteDiv");
+			compteDiv.innerHTML = "El compte esta malament";
+			return false;
+		}
+		// Fi de comprovació de valors
+		//var cuenta = String(banc) + String(sucursal) + String(dc) + String(compte);
+		reiniciarErrors();
+		resultat = "ES" + CalIban() + " " +banc+ " " + sucursal + " " + dc + " " + compte;
+		
+		iban_text.innerHTML = resultat;
+		
+		return false;
+	}
+
+	function reiniciarErrors()
+	{
+		bancdiv = document.getElementById("altreDiv");
+		bancdiv.innerHTML = "";
+		
+		controlDiv = document.getElementById("sucursalDiv");
+		controlDiv.innerHTML = "";
+		
+		sucursalDiv = document.getElementById("controlDiv");
+		sucursalDiv.innerHTML = "";
+		
+		compteDiv = document.getElementById("compteDiv");
+		compteDiv.innerHTML = "";
+		
+		iban_text = document.getElementById("res");
+		iban_text.innerHTML = "";
+	}
+
+	function CalIban()
+	{
+		var iban = String(banc) + String(sucursal);
+		var MOD_1 = iban % 97;
+		iban = "" + MOD_1 + dc + compte.substring(0,2);
+		MOD_1 = iban % 97;
+		iban = "" + MOD_1 + compte.substring(2,compte.length) + esp + "00";
+		MOD_iban = iban % 97;
+		var CC_iban = 98 - MOD_iban;
+		if (CC_iban < 10) {
+			CC_iban = '0' + CC_iban;
+		}
+		return CC_iban;
+	}
+	
+	function activarAltres()
+	{
+		var altres = document.getElementById("altre");
+		altres.disabled = false;
+		altres.focus();
+	}
+	
+	function desactivarAltres()
+	{
+		var altres = document.getElementById("altre");
+		altres.disabled = true;
+	}
+
+	function rotar()
+	{
+		var d = document.getElementById("for");
+		d.className ="rotar";
+	}
+    </script>
+
+  </head>
+  <body>
+	<div id="for">
+	<div id="form">
+	  <form onsubmit="return calcular()" class="form-container">
+		<fieldset>
+		  <legend><h3>IBAN</h3></legend>
+		  
+		  <div class="form-title">Bancs</div>
+				<label><input type="radio" name="banc" value="2038" checked onClick="desactivarAltres()">Bankia</label><br>
+				<label><input type="radio" name="banc" value="2100" onClick="desactivarAltres()">La caixa</label><br>
+				<label><input type="radio" name="banc" value="0129" onClick="desactivarAltres()">BBVA</label><br>
+				<label><input type="radio" name="banc" value="0128" onClick="desactivarAltres()">Bankinter</label><br>
+				<label><input type="radio" name="banc" value="0093" onClick="desactivarAltres()">Banco de Valencia</label><br>
+				<label><input type="radio" name="banc" value="0487" onClick="desactivarAltres()">Banco Mare Nostrum</label><br>
+				<label><input type="radio" name="banc" value="XXXX" onClick="activarAltres()">Altres</label>
+		 <label><input  class="form-field" type="text" name="altre" id="altre" maxlength="4" size="4" disabled> <span id="altreDiv" class="mal"> </span> </label>
+		 <label><div class="form-title">Sucursal</div> <input  class="form-field" type="text" name="sucursal" id="sucursal" maxlength="4" size="4"><span id="sucursalDiv" class="mal"> </span><br></label>
+		 <label><div class="form-title">Digit de control </div> <input class="form-field" type="text" name="dc" id="dc" maxlength="2" size="4"> <span id="controlDiv" class="mal"></span><br></label>
+		 <label><div class="form-title">Numero de compte</div><input class="form-field" type="text" name="compte" id="compte" maxlength="10" size="10"><span id="compteDiv" class="mal"> </span><br></label>
+		 <input type="submit" value="Calcular" class="buto" onClick="rotar()" id="calc">
+		 </fieldset>
+		 
+
+		  <h1>Resultat</h1>
+		  <h3><div id="res"></div></h3>
+
+	  </form>
+  </div>
+  </div>
+  <br/>
+  
+  
+  <br>
+  </body>
+</html>

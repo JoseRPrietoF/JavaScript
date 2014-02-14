@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title></title>
+    <meta content="">
+    <style></style>
+    <script>
+    function comprobar()
+    {
+		var correu = document.getElementById("correu").value;
+		var res = document.getElementById("res");
+		var expresio = /^[A-Za-z]]\w@iesjoanramis.org$/;
+		res.innerHTML = "";
+		if (!expresio.test(correu)) 
+		{
+			res.innerHTML = "Incorrecte";
+			//alert("Incorrecte");
+		} else {
+			res.innerHTML = "Correcte";
+			//alert("Correcte");
+		}
+		return false;
+	}
+    </script>
+  </head>
+  <body>
+  <form method="get" >
+	<input type="text" id="correu">
+	<input type="submit" value="Enviar" onClick="return comprobar()"/>
+  </form>
+  <div id="res"></div>
+  </body>
+</html>

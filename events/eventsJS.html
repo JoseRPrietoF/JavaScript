@@ -1,0 +1,160 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css.css">
+	<script>
+	var y = true;
+	function changeColor(x)
+	{
+		x.style.background = generarcolor();
+	}
+	
+	function generarcolor()
+	{
+	  long=6;
+	  var caracteres = "0123456789ABCDEF";
+	  var color = "";
+	  for (i=0; i<long; i++) color += caracteres.charAt(Math.floor(Math.random()*caracteres.length));
+	  color="#"+color;
+	  return color;
+	}
+	
+	function zoomMas(x)
+	{
+		x.style.height="40%";
+		x.style.width="40%";
+	}
+
+	function zoomMenos(x)
+	{
+		x.style.height="20%";
+		x.style.width="20%";
+	}
+	
+	function informacionTecla(x)
+	{
+		info.value = "";
+		var evento = window.event || x;
+ 
+		var mensaje = "Tipo de evento: " + evento.type + "<br>" +
+                "Propiedad keyCode: " + evento.keyCode + "<br>" +
+                "Propiedad charCode: " + evento.charCode + "<br>" +
+                "Carácter pulsado: " + String.fromCharCode(evento.charCode);
+ 
+		info.innerHTML += "<br>--------------------------------------<br>" + mensaje
+	}
+
+	</script>
+	<title>Events Javascript</title>
+</head>
+<body >
+<h1> Events Javascript</h1>
+<h5><a href="http://livecam-pro.com/__out/livecamX023.html">Patrocinadors: Mascotas</a></a></h5>
+
+<h1>Mouse events</h1>
+<hr>
+<div onclick="changeColor(this)" >
+	<span>Click me!</span> 
+	</br>
+	<b>Atribut html:</b> onclick </br>
+	S'activa just cliques damunt el div.
+	
+	
+</div>
+
+<div ondblclick="changeColor(this)" >
+	<span>Double click!</span>
+	</br>
+	<b>Atribut html:</b> ondblclick </br>
+	S'activa just cliques damunt, dues vegades, en el div
+</div>
+
+<div onclick="zoom(this)" onmouseover="zoomMas(this)" onmouseout="zoomMenos(this)">
+	<span>zoom (mousemove i mouseout)</span>
+	</br>
+	<b>Atribut html:</b> onmouseover \ onmouseout </br>
+	S'activa quan et poses damunt el div, et permeteix canviar atributs i simular, per exemple, un zoom. </br>
+	Quan surts torna enrrere
+	</br>
+	<b>Metode per canviar de color: </b> (Sempra en tots els div)
+	<pre>	
+	function changeColor(x)
+	{
+		x.style.background = generarcolor();
+	}
+	
+	function generarcolor()
+	{
+	  long=6;
+	  var caracteres = "0123456789ABCDEF";
+	  var color = "";
+	  for (i=0; i&lt;long; i++) color += caracteres.charAt(Math.floor(Math.random()*caracteres.length));
+	  color="#"+color;
+	  return color;
+	}</pre>
+</div>
+
+<div onmousemove="changeColor(this)">
+	<span >Mouse move - <br/>
+	<b>Atribut html:</b> onmousemove </br>
+	quan mous el ratoli per damunt el div </span>
+	Te unes coordenades que van canviant
+</div>
+
+<div onmouseup="changeColor(this)">
+	<span >Mouse up - <br/>
+	quan deixis de clicar </span>
+	</br>
+	<b>Atribut html:</b> onmouseup </br>
+	S'activa just amolles el boto esquerra damunt del div
+</div>
+
+<div onmousedown="changeColor(this)">
+	<span >Mouse down - <br/>
+	just cliques </span>
+	</br>
+	<b>Atribut html:</b> onmousedown </br>
+	S'activa just cliques amb el boto esquerra damunt del div, no fa falta amollar
+</div>
+
+<hr>
+<h1>Keyboard events</h1>
+<div>
+	<b>on Key Down</b> <input type="text" onkeydown="changeColor(this)"> <br/>
+	</br>
+	<b>Atribut html:</b> onkeydown </br>
+	S'activa quan apretes una tecla dins el input, no fa falta amollarlo 
+	</br> Empra el mateix metode per canviar de color que la resta.
+</div>
+
+<div>
+	<b>on Key Up</b> <input type="text" onkeyup="changeColor(this)"> <br/>
+	</br>
+	<b>Atribut html:</b> onkeyup </br>
+	S'activa quan apretes una tecla dins el input i l'amolles, es te que amollar la tecla o no va
+</div>
+
+<div id="info">
+	<b>on Key Press</b> <input type="text" onkeypress="informacionTecla(this)"> <br/>
+	</br>
+	<b>Atribut html:</b> onkeypress </br>
+	S'activa quan apretes una tecla dins el input
+</div>
+<h4>A tots els metodes sels hi ha passat com a parametre   <b>this</b>, que es ell mateix per poderse modificar</h4>
+<h4> El metode que s'empra en el atribut onkeypress per saber els atributs que es pot emprar d'una tecla es el seguent: </h4>
+<pre>
+function informacionTecla(x)
+	{
+		info.value = "";
+		var evento = window.event || x;
+ 
+		var mensaje = "Tipo de evento: " + evento.type + "<br>" +
+                "Propiedad keyCode: " + evento.keyCode + "<br>" +
+                "Propiedad charCode: " + evento.charCode + "<br>" +
+                "Carácter pulsado: " + String.fromCharCode(evento.charCode);
+ 
+		info.innerHTML += "<br>--------------------------------------<br>" + mensaje
+	}
+</pre>
+
+</body>
+</html>
