@@ -1,0 +1,27 @@
+{"vols": [
+	{
+	  "id": "1",
+	  "name": "Valencia",
+	  "target": [
+			  {"City": "Madrid"}
+			]
+	},
+	{
+	  "id": "2",
+	  "name": "Barcelona",
+	  "target": [
+			  {"City": "Madrid"},
+			  {"City": "Zaragoza"}
+			]
+	},
+	{
+	  "id": "3",
+	  "name": "Madrid",
+	  "target":  [
+			  {"City": "Barcelona"},
+			  {"City": "València"},
+			  {"City": "Sevilla"}
+			]
+	}
+	]
+}

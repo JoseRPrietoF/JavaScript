@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>Calculadora</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <script>
+	var valor = "";
+	var y = 0;
+	var simbol = ""; 
+	var lletres=["Ѡ","А","Б","Г","Д","Є","Ѕ","З","И","Ѳ"];
+	var numeros=["0","1","2","3","4","5","6","7","8","9"];
+	var canviar = false;
+
+	function reiniciarDiv() 
+	{
+		resDiv = document.getElementById("res");
+		resDiv.innerHTML = "";
+	}
+	
+	function agafarNombre(x){
+		valor += x.id;
+		resDiv = document.getElementById("res");
+		resDiv.innerHTML = this.valor;
+	}
+	
+	function mostrarY(){
+		resDiv = document.getElementById("res");
+		resDiv.innerHTML = y;
+	}
+	
+	function mostrarSigne(x){
+		resDiv = document.getElementById("res");
+		resDiv.innerHTML = x.textContent;
+	}
+	
+	function operacions(x){
+		console.log("Simbol "+simbol);
+		if (y == 0 && valor == "" && x.textContent != "") return;
+		if (x.textContent == "C") {
+			valor = "";
+			y = 0;
+			simbol = "";
+			reiniciarDiv();
+			return;
+		}
+		if (x.textContent == "="){
+			re();
+		} else {
+			if (valor != "" && simbol != "") return;
+			if (simbol != "") re();
+			
+			simbol = x.textContent;  // Agafem el simbol, la operacio a fer
+			y = valor;
+			valor = "";
+			reiniciarDiv();
+			resDiv = document.getElementById("res");
+			resDiv.innerHTML = x.textContent;
+		}
+	}
+	
+	function re(){
+		if (simbol == "+") y = parseFloat(y) + parseFloat(valor);
+			if (simbol == "-") y = parseFloat(y) - parseFloat(valor);
+			if (simbol == "*") y = parseFloat(y) * parseFloat(valor);
+			if (simbol == "/") y = parseFloat(y) / parseFloat(valor);
+			valor = y;
+			mostrarY()
+			y = 0;
+			simbol = "";
+	}
+	
+	function canvi() {
+		var cosDiv = document.getElementById("cos");
+		if (canviar == false ) {
+			for (i =0; i < 10; i++) {
+				var div = document.createElement("div");
+				var num = document.createTextNode(lletres[i]);
+				div.id = String(i);
+				
+				div.appendChild(num);
+				
+				var divUn = document.getElementById(String(i));
+				cosDiv.replaceChild(div,divUn);
+				div.className ="cuadro num";
+				div.setAttribute('onclick', "agafarNombre(this);");
+			}
+			canviar = true;
+		} else {
+			for (i =0; i < 10; i++) {
+				var div = document.createElement("div");
+				var num = document.createTextNode(String(i));
+				div.id = String(i);
+				
+				div.appendChild(num);
+				
+				var divUn = document.getElementById(String(i));
+				cosDiv.replaceChild(div,divUn);
+				div.className ="cuadro num";
+				div.setAttribute('onclick', "agafarNombre(this);");
+			}
+			canviar = false
+		}
+	}
+		
+    </script>
+  </head>
+  <body>
+  <div id="cos">
+	  <div id="res" >  </div>
+	  <div id="7" class="cuadro num" onClick="agafarNombre(this)">7</div>
+	  <div id="8" class="cuadro num" onClick="agafarNombre(this)">8</div>
+	  <div id="9" class="cuadro num" onClick="agafarNombre(this)">9</div>
+	  <div id="+" class="cuadro operacio" onClick="operacions(this)">+</div>
+	  <div id="4" class="cuadro num" onClick="agafarNombre(this)">4</div>
+	  <div id="5" class="cuadro num" onClick="agafarNombre(this)">5</div>
+	  <div id="6" class="cuadro num" onClick="agafarNombre(this)">6</div>
+	  <div id="-" class="cuadro operacio" onClick="operacions(this)">-</div>
+	  <div id="1" class="cuadro num" onClick="agafarNombre(this)">1</div>
+	  <div id="2" class="cuadro num" onClick="agafarNombre(this)">2</div>
+	  <div id="3" class="cuadro num" onClick="agafarNombre(this)">3</div>
+	  <div id="*" class="cuadro operacio" onClick="operacions(this)">*</div>
+	  <div id="0" class="cuadro num" onClick="agafarNombre(this)">0</div>
+	  <div id="punt" class="cuadro C" onClick="operacions(this)">C</div>
+	  <div id="igual" class="cuadro igual" onClick="operacions(this)">=</div>
+	  <div id="C" class="cuadro operacio" onClick="operacions(this)">/</div>
+	  <div id="canvi" class="cuadro opcio" onClick="canvi()">Canvi</div>
+  </div>
+  </body>
+</html>

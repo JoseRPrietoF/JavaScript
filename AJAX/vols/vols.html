@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/
+xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css.css">
+<title>Hola Mundo con AJAX</title>
+<script type="text/javascript">
+	window.onload = descargaArchivo;
+	var jsonObj;
+	function descargaArchivo() {
+		// Obtener la instancia del objeto XMLHttpRequest
+		if(window.XMLHttpRequest) {
+			peticion_http = new XMLHttpRequest();
+		}
+		else if(window.ActiveXObject) {
+			peticion_http = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		// Preparar la funcion de respuesta
+		peticion_http.onreadystatechange = muestraContenido;
+		// Realizar peticion HTTP
+		peticion_http.open('GET', 'http://localhost/ajax/vols/infoVols.json', true);
+		peticion_http.send(null);
+		
+		
+		function muestraContenido() {
+			if(peticion_http.readyState == 4) {
+				if(peticion_http.status == 200) {
+					jsonObj = JSON.parse(peticion_http.responseText);
+					var e = document.getElementById("origen");
+					var opcions = new Array();
+
+					opcions = agafarOrigens(jsonObj, opcions); // Agafem els origens i els posem dins un array
+
+					crearOpciones(e, opcions); // Amb aquest array creem la llista d'opcions
+				}
+			}
+		}
+		
+	}
+	
+	function cercarId(cad){
+		var x;
+		for (i=0; i<jsonObj.vols.length; i++){
+			if (jsonObj.vols[i].name == cad){
+				x = i;
+				break;
+			}
+		}
+		return x;
+	}
+	
+	function crearVols(x){
+		var city = x.value
+		var e = document.getElementById("desti");
+		borrarFills(e);
+		var destins = new Array();
+		var num = cercarId(city);
+		for (i=0; i<jsonObj.vols[num].target.length; i++){
+			var option = document.createElement("option");
+			option.innerHTML = jsonObj.vols[num].target[i].City;
+			destins.push(option);
+		}
+		crearOpciones(e, destins);
+	}
+	
+	function agafarOrigens(jsonObj, opcions){ // Json i array
+		for (i=0; i<jsonObj.vols.length; i++){
+			var option = document.createElement("option");
+			option.innerHTML = jsonObj.vols[i].name;
+			opcions.push(option);
+		}
+		return opcions;
+	}
+	
+	function crearOpciones(select, opcions) {
+		for (i=0; i<opcions.length; i++) {
+			select.appendChild(opcions[i]);
+		}
+	}
+	
+	function borrarFills(x){
+		while(x.hasChildNodes()){
+			x.removeChild(x.childNodes[0]);
+		}
+	}
+
+</script>
+</head>
+<body>
+<div id="wrapper">
+    <!--this wrapper center the content-->
+    <div class="happySelectContainer">
+        <div class="arrow"></div>
+       <select id="origen" onChange="crearVols(this)">
+			<option>Origen</option>
+        </select>
+    </div>
+
+    <div class="happySelectContainer">
+        <div class="arrow"></div>
+        <select id="desti">
+			<option style="size:5px">Desti</option>
+        </select>
+    </div>
+
+</div>
+</body>
+</html>
