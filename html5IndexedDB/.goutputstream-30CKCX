@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Agenda</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  <script>
+    function afegir(){
+		var nom = document.getElementById("nom");
+		var descripcio = document.getElementById("descripcio");
+		var importancia = document.getElementById("importancia");
+		var temps = document.getElementById("temps");
+		
+		
+		var openRequest = indexedDB.open("agenda","Llista de tareas");
+
+		if (db.version != '1') {
+		  // User's first visit, initialize database.
+			openRequest.onupgradeneeded = function(e) { // cuando es necesario crear las tablas de la base de datos
+				var thisDB = e.target.result;
+				if(!thisDB.objectStoreNames.contains("tareas")) {
+					var os = thisDB.createObjectStore("tareas", {keyPath: "nom"}); // crear tabla, con keypath para luego buscar
+				}
+			}
+		  db.setVersion('1');
+		} else {
+		  // DB already initialized.
+		}
+		
+		//var transaction = db.transaction(["tareas"],IDBTransaction.READ_WRITE);
+		//var store = transaction.objectStore("tareas");
+		
+		var task = {
+			nom: nom.value, 
+			descripcio:descripcio.value, 
+			importancia:importancia.value, 
+			temps:temps.value
+			};
+		
+		var request = store.put(task);
+		
+		
+	}
+	
+		/*
+		task = [{tarea: nom, desc:descripcio, imp:importancia, time:temps}];
+		peticion.onsuccess=function(event){
+			var contenedor = bbdd.createObjectStore("tareas", {keyPath:"tarea"});
+			contenedor.createIndex("tarea","tarea", {unique:true});
+			for (n in task){
+				contenedor.add(task[n]);
+			}
+		};*/
+  </script>
+  </head>
+  <body>
+	  <div class="CSSTableGenerator" >
+	  <table >
+		<tr>
+			<td >
+				Nom de la tarea
+			</td>
+			<td>
+				Descripcio
+			</td>
+			<td>
+				Importancia
+			</td>
+			<td>
+				Hores
+			</td>
+		</tr>
+			<tr>
+			<td >
+				<label><input  class="form-field" type="text" name="nom" id="nom" maxlength="20" size="20"> <span id="altreDiv"> </span> </label>
+			</td>
+			<td>
+				<label><input  class="form-field" type="text" name="descripcio" id="descripcio" maxlength="20" size="20"> <span id="altreDiv" > </span> </label>
+			</td>
+			<td>
+				<label><input  class="form-field" type="text" name="importancia" id="importancia" maxlength="10" size="10"> <span id="altreDiv" > </span> </label>
+			</td>
+			<td>
+				<label><input  class="form-field" type="text" name="temps" id="temps" maxlength="10" size="10"> <span id="altreDiv" > </span> </label>
+			</td>
+		</tr>
+	</table>
+	<input type="submit" value="Afegir" class="buto" onClick="afegir()" id="afegir">
+	</div>
+  </body>
+</html>
