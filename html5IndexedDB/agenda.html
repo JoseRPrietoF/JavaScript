@@ -3,196 +3,172 @@
     <title>Agenda</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script>
-		var oIndexDB = null;
-		var hDb = null;
-	function inici(){
-			// Deteccion de caracteristicas 
-	  var oIndexDB = null;
-	  if ( window.indexedDB ) { 
-		 oIndexDB = window.indexedDB
-	  } 
-	  if ( oIndexDB == null ) {
-		 handleError();
-	  }
-	  // Apertura BD
-	  // hDB is a global variable.
-	  hDb = null; 
-	  if (window.indexedDB) {
-
-		var req = window.indexedDB.open( "Agenda", 1.0 );
-
-		req.onsuccess = function(evt) { 
-		   hDB = evt.target.result;
-		}      
-		req.onupgradeneeded = function(evt) {
-		   createDatabaseObjects( evt.target.result );
-		}
-		
-	  }
-	  
-	function createDatabaseObjects( dbHandle ) {
-
-
-		   if ( dbHandle == null ) {
-			  updateResults( "Can't create database objects; the database is not open." );
-		   } else {
-		   
-			  var oOptions = { keyPath : "Id", autoIncrement : true };
-			  var oStore = dbHandle.createObjectStore( "tarea", oOptions );
-
-		 }
-		}
 	
-	init();
-	}
+	var oIndexDB = null; 
+	var hDb = null; 
+	function inici() {
+	   // Deteccion de caracteristicas 
+	   var oIndexDB = null; 
+	   if ( window.indexedDB ) {
+		  oIndexDB = window.indexedDB }
+	   if ( oIndexDB == null ) {
+		  handleError(); 
+		  }
+	   // Apertura BD
+	   // hDB is a global variable.
+	   hDb = null; 
+	   if (window.indexedDB) {
+		  var req = window.indexedDB.open( "Agenda", 
+		  1.0 ); 
+		  req.onsuccess = function(evt) {
+			 hDB = evt.target.result; 
+			 }
+		  req.onupgradeneeded = function(evt) {
+			 createDatabaseObjects( evt.target.result ); 
+			 }
+		  }
+	   function createDatabaseObjects( dbHandle ) {
+		  if ( dbHandle == null ) {
+			 updateResults( "Can't create database objects; the database is not open." ); 
+			 }
+		  else {
+			 var oOptions = {
+				keyPath : "Id", 
+				autoIncrement : true }; 
+			 var oStore = dbHandle.createObjectStore( "tarea", 
+			 oOptions ); 
+			 }
+		  }
+	   init(); 
+	   }
 	function modalWin() {
-		if (window.showModalDialog) {
-			window.showModalDialog("afegir.html","name","dialogWidth:700px;dialogHeight:120px");
-		} else {
-			window.open('afegir.html','name','height=700,width=120,toolbar=no,directories=no,status=no,continued from previous linemenubar=no,scrollbars=no,resizable=no ,modal=yes');
-		}
-	}
-	function recuperarInf(){
-		 var trans = hDB.transaction(["tarea"], "readwrite" );
-		  var store = trans.objectStore("tarea");
-
-		  // Get everything in the store;
-		  var keyRange = IDBKeyRange.lowerBound(0);
-		  var cursorRequest = store.openCursor(keyRange);
-		  capsalera();
-		  cursorRequest.onsuccess = function(e) {
-			var result = e.target.result;
-			if(!!result == false)
-			  return;
-
-			pintarTaula(result.value);
-			result.continue();
-		  };
-	}
-	
-	function capsalera(){
-		var taula = document.getElementById("taula");
-		borrarFills(taula);
-		var tr = document.createElement("tr");
-		var nom = document.createElement("td");
-		var descripcio = document.createElement("td");
-		var importancia = document.createElement("td");
-		var temps = document.createElement("td");
-		var borrar = document.createElement("td");
-
-		nom.innerHTML = "Nom de la tarea";
-		descripcio.innerHTML = "Descripcio";
-		importancia.innerHTML = "Importancia";
-		temps.innerHTML = "Hores";
-		borrar.innerHTML = "Borrar";
-		taula.appendChild(tr);
-		tr.appendChild(nom);
-		tr.appendChild(descripcio);
-		tr.appendChild(importancia);
-		tr.appendChild(temps);
-		tr.appendChild(borrar);
-	}
-	
-	function pintarTaula(x){
-		var taula = document.getElementById("taula");
-		var tr = document.createElement("tr");
-		var nom = document.createElement("td");
-		var descripcio = document.createElement("td");
-		var importancia = document.createElement("td");
-		var temps = document.createElement("td");
-		var id = document.createElement("td");
-		id.setAttribute('onclick', "borrar(this);");
-		borrarFills(tr);
-		nom.innerHTML = x.nom;
-		descripcio.innerHTML = x.descripcio;
-		importancia.innerHTML = x.importancia;
-		temps.innerHTML = x.temps;
-		id.innerHTML = x.Id;
-		taula.appendChild(tr);
-		tr.appendChild(nom);
-		tr.appendChild(descripcio);
-		tr.appendChild(importancia);
-		tr.appendChild(temps);
-		tr.appendChild(id);
-	}
-	
-	function init(){
-		oIndexDB = null;
-	  if ( window.indexedDB ) { 
-		 oIndexDB = window.indexedDB
-	  } 
-	  if ( oIndexDB == null ) {
-		 handleError();
-	  }
-	  // Apertura BD
-	  // hDB is a global variable.
-	   
-	  if (window.indexedDB) {
-
-		var req = window.indexedDB.open( "Agenda", 1.0 );
-
-		req.onsuccess = function(evt) { 
-		   hDB = evt.target.result;
-		   recuperarInf();
-		}      
-		req.onupgradeneeded = function(evt) {
-		   createDatabaseObjects( evt.target.result );
-		} 
-	  }
-	}
-	
-	function borrarFills(x){
-		while(x.hasChildNodes()){
-			x.removeChild(x.childNodes[0]);
-			
-		}
-	}
-	
-	function borrarDB(){
-		var req = indexedDB.deleteDatabase('Agenda');
-		req.onsuccess = function () {
-			console.log("Deleted database successfully");
-		};
-		req.onerror = function () {
-			console.log("Couldn't delete database");
-		}
-	}
-	
-	function borrar(x){
-		/*var req = window.indexedDB.open("Agenda");
-		req.onsuccess = function(evt) { 
-		   hDB = evt.target.result;
-		}
-		  var request = hDB.transaction(["tarea"], "readwrite" ).objectStore("tarea").delete(x.innerHTML);
-		  console.log(hDB.transaction(["tarea"], "readwrite" ).objectStore("tarea").get(x.innerHTML));
-
-		  request.onsuccess = function(e) {
-			  console.log("Borrado");
-			  recuperarInf();
-		  };
-
-		  request.onerror = function(e) {
-			console.log(e);
-		  };*/
-		  var trans = hDB.transaction(["tarea"], "readwrite" );
-		  var store = trans.objectStore("tarea");
-
-		  // Get everything in the store;
-		  var keyRange = IDBKeyRange.only(Number(x.innerHTML));
-		  var cursorRequest = store.openCursor(keyRange);
-		  cursorRequest.onsuccess = function(e) {
-			var result = e.target.result;
-			if(!!result == false)
-			  return;
-			console.log("Borrado");
-			result.delete(x.innerHTML);
-			recuperarInf();
-
-		  };
-	}
-
-	window.addEventListener("DOMContentLoaded", inici, false);
-	window.addEventListener("focus", recuperarInf);
+	   if (window.showModalDialog) {
+		  window.showModalDialog("afegir.html", 
+		  "name", "dialogWidth:700px;dialogHeight:120px"); 
+		  }
+	   else {
+		  window.open('afegir.html', 
+		  'name', 'height=700,width=120,toolbar=no,directories=no,status=no,continued from previous linemenubar=no,scrollbars=no,resizable=no ,modal=yes'); 
+		  }
+	   }
+	function recuperarInf() {
+	   var trans = hDB.transaction(["tarea"], 
+	   "readwrite" ); 
+	   var store = trans.objectStore("tarea"); 
+	   // Get everything in the store;
+	   var keyRange = IDBKeyRange.lowerBound(0); 
+	   var cursorRequest = store.openCursor(keyRange); 
+	   capsalera(); 
+	   cursorRequest.onsuccess = function(e) {
+		  var result = e.target.result; 
+		  if(!!result == false) return; 
+		  pintarTaula(result.value); 
+		  result.continue(); 
+		  }; 
+	   }
+	function capsalera() {
+	   var taula = document.getElementById("taula"); 
+	   borrarFills(taula); 
+	   var tr = document.createElement("tr"); 
+	   var nom = document.createElement("td"); 
+	   var descripcio = document.createElement("td"); 
+	   var importancia = document.createElement("td"); 
+	   var temps = document.createElement("td"); 
+	   var borrar = document.createElement("td"); 
+	   nom.innerHTML = "Nom de la tarea"; 
+	   descripcio.innerHTML = "Descripcio"; 
+	   importancia.innerHTML = "Importancia"; 
+	   temps.innerHTML = "Hores"; 
+	   borrar.innerHTML = "Borrar"; 
+	   taula.appendChild(tr); 
+	   tr.appendChild(nom); 
+	   tr.appendChild(descripcio); 
+	   tr.appendChild(importancia); 
+	   tr.appendChild(temps); 
+	   tr.appendChild(borrar); 
+	   }
+	function pintarTaula(x) {
+	   var taula = document.getElementById("taula"); 
+	   var tr = document.createElement("tr"); 
+	   var nom = document.createElement("td"); 
+	   var descripcio = document.createElement("td"); 
+	   var importancia = document.createElement("td"); 
+	   var temps = document.createElement("td"); 
+	   var id = document.createElement("td"); 
+	   id.setAttribute('onclick', "borrar(this);"); 
+	   id.className = 'borrar'; 
+	   borrarFills(tr); 
+	   nom.innerHTML = x.nom; 
+	   descripcio.innerHTML = x.descripcio; 
+	   importancia.innerHTML = x.importancia; 
+	   temps.innerHTML = x.temps; 
+	   id.value = x.Id; 
+	   id.innerHTML = "X"; 
+	   taula.appendChild(tr); 
+	   tr.appendChild(nom); 
+	   tr.appendChild(descripcio); 
+	   tr.appendChild(importancia); 
+	   tr.appendChild(temps); 
+	   tr.appendChild(id); 
+	   }
+	function init() {
+	   oIndexDB = null; 
+	   if ( window.indexedDB ) {
+		  oIndexDB = window.indexedDB }
+	   if ( oIndexDB == null ) {
+		  handleError(); 
+		  }
+	   // Apertura BD
+	   // hDB is a global variable.
+	   if (window.indexedDB) {
+		  var req = window.indexedDB.open( "Agenda", 
+		  1.0 ); 
+		  req.onsuccess = function(evt) {
+			 hDB = evt.target.result; 
+			 recuperarInf(); 
+			 }
+		  req.onupgradeneeded = function(evt) {
+			 createDatabaseObjects( evt.target.result ); 
+			 }
+		  }
+	   }
+	function borrarFills(x) {
+	   while(x.hasChildNodes()) {
+		  x.removeChild(x.childNodes[0]); 
+		  }
+	   }
+	function borrarDB() {
+	   if(confirm('Estas seguro de que quieres borrar tota la BD?')) {
+		  var req = indexedDB.deleteDatabase('Agenda'); 
+		  req.onsuccess = function () {
+			 console.log("Deleted database successfully"); 
+			 }; 
+		  req.onerror = function () {
+			 console.log("Couldn't delete database"); 
+			 }
+		  }
+	   recuperarInf(); 
+	   }
+	function borrar(x) {
+	   var trans = hDB.transaction(["tarea"], 
+	   "readwrite" ); 
+	   var store = trans.objectStore("tarea"); 
+	   // Get everything in the store;
+	   var keyRange = IDBKeyRange.only(Number(x.value)); 
+	   var cursorRequest = store.openCursor(keyRange); 
+	   cursorRequest.onsuccess = function(e) {
+		  var result = e.target.result; 
+		  if(!!result == false) return; 
+		  console.log("Borrado"); 
+		  if(confirm('Estas seguro de que quieres borrar?')) {
+			 result.delete(x.value); 
+			 }
+		  }; 
+	   }
+	window.addEventListener("DOMContentLoaded", 
+	inici, false); 
+	window.addEventListener("focus", 
+	recuperarInf); 
     </script>
   </head>
   <body onload="recuperarInf">

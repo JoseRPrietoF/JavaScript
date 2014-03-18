@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Video Jose</title>
+    <meta content="">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    <script>
+	var video = null;
+	var temps = null;
+	var aturar = null;
+	var nom = null;
+	window.addEventListener("DOMContentLoaded", init, false); 
+	function init(){	
+		video=document.getElementById("video"); 
+		aturar=document.getElementById("aturar"); 
+		temps=document.getElementById("temps"); 
+		nom=document.getElementById("nom"); 
+		aturar.style.display = "none";
+		nom.innerHTML = video.src;
+	}
+	
+	function time(){
+		temps.innerHTML = parseInt(video.currentTime) + " / "+ parseInt(video.duration);
+	}
+	
+    function start(){
+		 video.play();
+		 
+		 aturar.style.display = "inline";
+		 nom.removeAttribute("hidden");
+		 temps.removeAttribute("hidden");
+		 setInterval("time()", 100);
+	}
+	
+	function stop(){
+		video.pause();
+		clearInterval();
+		aturar.style.display = "none";
+		nom.setAttribute("hidden", "");
+		aturar.setAttribute("hidden", "");
+		temps.setAttribute("hidden", "");
+	}
+	
+
+    </script>
+  </head>
+  <body>
+	<div class="tot">
+  <video width="500" height="300" src="video.ogv" id="video">
+
+	Format de video no soportat
+  </video>
+  <div class="divTot">
+	<h2>Temps:  <div id="temps"></div></h2>
+  </div>
+  <button class="control" id="repro" value="Reproduir" onClick="start()" ></button>
+  <button class="control" id="aturar" value="Aturar" onClick="stop()"></button>
+  
+  <br/>
+  Ruta del fitxer: <div id="nom"></div>
+  </div>
+  </body>
+
+</html>

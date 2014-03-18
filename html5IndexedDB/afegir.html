@@ -3,105 +3,94 @@
     <title>Agenda</title>
     <link rel="stylesheet" type="text/css" href="style.css">
   <script>
-    function inici(){
-			// Deteccion de caracteristicas 
-	  var oIndexDB = null;
-	  if ( window.indexedDB ) { 
-		 oIndexDB = window.indexedDB
-	  } 
-	  if ( oIndexDB == null ) {
-		 handleError();
-	  }
-	  // Apertura BD
-	  // hDB is a global variable.
-	  hDb = null; 
-	  if (window.indexedDB) {
-
-		var req = window.indexedDB.open( "Agenda", 1.0 );
-
-		req.onsuccess = function(evt) { 
-		   hDB = evt.target.result;
-		}      
-		req.onupgradeneeded = function(evt) {
-		   createDatabaseObjects( evt.target.result );
-		}
-		req.delete = function(id) {
-		  var db = html5rocks.indexedDB.db;
-		  var trans = db.transaction(["tarea"], IDBTransaction.READ_WRITE, 0);
-		  var store = trans.objectStore("tarea");
-
-		  var request = store.delete(id);
-
-		  request.onsuccess = function(e) {
-			recuperarInf();
-		  };
-
-		  request.onerror = function(e) {
-			console.log(e);
-		  };
-		};
-	  }
-	  
-	  
-		  
-		function createDatabaseObjects( dbHandle ) {
-
-
-			   if ( dbHandle == null ) {
-				  updateResults( "Can't create database objects; the database is not open." );
-			   } else {
-			   
-				  var oOptions = { keyPath : "Id", autoIncrement : true };
-				  var oStore = dbHandle.createObjectStore( "tarea", oOptions );
-
+	function inici() {
+	   // Deteccion de caracteristicas 
+	   var oIndexDB = null; 
+	   if ( window.indexedDB ) {
+		  oIndexDB = window.indexedDB }
+	   if ( oIndexDB == null ) {
+		  handleError(); 
+		  }
+	   // Apertura BD
+	   // hDB is a global variable.
+	   hDb = null; 
+	   if (window.indexedDB) {
+		  var req = window.indexedDB.open( "Agenda", 
+		  1.0 ); 
+		  req.onsuccess = function(evt) {
+			 hDB = evt.target.result; 
 			 }
-		}
-	}
-	
+		  req.onupgradeneeded = function(evt) {
+			 createDatabaseObjects( evt.target.result ); 
+			 }
+		  req.delete = function(id) {
+			 var db = html5rocks.indexedDB.db; 
+			 var trans = db.transaction(["tarea"], 
+			 IDBTransaction.READ_WRITE, 0); 
+			 var store = trans.objectStore("tarea"); 
+			 var request = store.delete(id); 
+			 request.onsuccess = function(e) {
+				recuperarInf(); 
+				}; 
+			 request.onerror = function(e) {
+				console.log(e); 
+				}; 
+			 }; 
+		  }
+	   function createDatabaseObjects( dbHandle ) {
+		  if ( dbHandle == null ) {
+			 updateResults( "Can't create database objects; the database is not open." ); 
+			 }
+		  else {
+			 var oOptions = {
+				keyPath : "Id", 
+				autoIncrement : true }; 
+			 var oStore = dbHandle.createObjectStore( "tarea", 
+			 oOptions ); 
+			 }
+		  }
+	   }
 	function saveRecord( oNewRecord ) {
-
 	   if ( hDB == null ) {
-		  updateResults( "Can't save data; the database is not open." );
-	   } else {
-	   
-		 var hTransaction = hDB.transaction( "tarea", "readwrite" );
-		 var hObjectStore = hTransaction.objectStore( "tarea" );
-		 var hImageReq = hObjectStore.put( oNewRecord );
-		}
-	}
-
-    
-    function borrarDB(){
-		var req = indexedDB.deleteDatabase('Agenda');
-		req.onsuccess = function () {
-			console.log("Deleted database successfully");
-		};
-		req.onerror = function () {
-			console.log("Couldn't delete database");
-		}
-	}
+		  updateResults( "Can't save data; the database is not open." ); 
+		  }
+	   else {
+		  var hTransaction = hDB.transaction( "tarea", 
+		  "readwrite" ); 
+		  var hObjectStore = hTransaction.objectStore( "tarea" ); 
+		  var hImageReq = hObjectStore.put( oNewRecord ); 
+		  }
+	   }
+	function borrarDB() {
+	   if(confirm('Estas seguro de que quieres borrar tota la BD?')) {
+		  var req = indexedDB.deleteDatabase('Agenda'); 
+		  req.onsuccess = function () {
+			 console.log("Deleted database successfully"); 
+			 }; 
+		  req.onerror = function () {
+			 console.log("Couldn't delete database"); 
+			 }
+		  }
+	   }
 	function afegir() {
-		var nom = document.getElementById("nom");
-		var descripcio = document.getElementById("descripcio");
-		var importancia = document.getElementById("importancia");
-		var temps = document.getElementById("temps");
-		var task = {
-			nom: nom.value, 
-			descripcio:descripcio.value, 
-			importancia:importancia.value, 
-			temps:temps.value};
-		saveRecord(task);
-			
-		nom.value = ""; descripcio.value = ""; importancia.value=""; temps.value="";
-		tancarFinestra();
-	}
-	
-	function tancarFinestra(){
-		window.close();
-	}
-	
-	window.addEventListener("DOMContentLoaded", inici, false);
-	
+	   var nom = document.getElementById("nom"); 
+	   var descripcio = document.getElementById("descripcio"); 
+	   var importancia = document.getElementById("importancia"); 
+	   var temps = document.getElementById("temps"); 
+	   var task = {
+		  nom : nom.value, descripcio : descripcio.value, importancia : importancia.value, temps : temps.value}; 
+	   saveRecord(task); 
+	   nom.value = ""; 
+	   descripcio.value = ""; 
+	   importancia.value = ""; 
+	   temps.value = ""; 
+	   tancarFinestra(); 
+	   }
+	function tancarFinestra() {
+	   window.close(); 
+	   }
+	window.addEventListener("DOMContentLoaded", 
+	inici, false); 
   </script>
   </head>
   <body>
